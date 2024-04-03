@@ -28,10 +28,26 @@ class MyApp extends StatelessWidget {
 
 /// The state of the main application widget.
 class MyAppState extends ChangeNotifier {
+
+  /// The current word pair.
   var current = WordPair.random();
 
+  /// Get the next word pair.
   void getNextName() {
     current = WordPair.random();
+    notifyListeners();
+  }
+
+  /// The set of saved word pairs.
+  var favorites = <WordPair>{};
+
+  /// Toggle the saved state of a word pair.
+  void toggleFavorite() {
+    if (favorites.contains(current)) {
+      favorites.remove(current);
+    } else {
+      favorites.add(current);
+    }
     notifyListeners();
   }
 }
@@ -40,8 +56,15 @@ class MyAppState extends ChangeNotifier {
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+    // Get the app state.
     var appState = context.watch<MyAppState>();
+
+    // Get the current word pair.
     var pair = appState.current;
+
+    // Determine the favorite icon.
+    IconData icon = appState.favorites.contains(pair) ? Icons.favorite : Icons.favorite_border;
 
     return Scaffold(
       body: Center(
@@ -50,11 +73,31 @@ class MyHomePage extends StatelessWidget {
           children: [
             BigCard(pair: pair),
             SizedBox(height: 15),
-            ElevatedButton(
-              onPressed: () {
-                appState.getNextName();
-              },
-              child: Text('Next Name'),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+
+                // Favorite button.
+                ElevatedButton.icon(
+                  onPressed: () {
+                    appState.toggleFavorite();
+                  },
+                  icon: Icon(icon),
+                  label: Text('like'),
+                ),
+
+                // Spacer.
+                SizedBox(width: 15),
+
+                // Next button.
+                ElevatedButton(
+                  onPressed: () {
+                    appState.getNextName();
+                  },
+                  child: Text('Next'),
+                ),
+
+              ],
             ),
           ],
         ),
@@ -63,12 +106,14 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
+/// A widget that displays a big card with a word pair.
 class BigCard extends StatelessWidget {
   const BigCard({
     super.key,
     required this.pair,
   });
 
+  /// The word pair to display.
   final WordPair pair;
 
   @override
