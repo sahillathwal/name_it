@@ -28,7 +28,6 @@ class MyApp extends StatelessWidget {
 
 /// The state of the main application widget.
 class MyAppState extends ChangeNotifier {
-
   /// The current word pair.
   var current = WordPair.random();
 
@@ -52,55 +51,77 @@ class MyAppState extends ChangeNotifier {
   }
 }
 
-/// The home page widget.
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: Row(
+        children: [
+          SafeArea(
+            child: NavigationRail(
+              extended: false,
+              destinations: [
+                NavigationRailDestination(
+                  icon: Icon(Icons.home),
+                  label: Text('Home'),
+                ),
+                NavigationRailDestination(
+                    icon: Icon(Icons.favorite), label: Text('Favorites')),
+              ],
+              selectedIndex: 0,
+              onDestinationSelected: (value) {
+                print('Destination: $value');
+              },
+            ),
+          ),
+          Expanded(
+            child: Container(
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: GenratorPage(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-    // Get the app state.
+class GenratorPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-
-    // Get the current word pair.
     var pair = appState.current;
 
-    // Determine the favorite icon.
-    IconData icon = appState.favorites.contains(pair) ? Icons.favorite : Icons.favorite_border;
+    IconData icon = appState.favorites.contains(pair)
+        ? Icons.favorite
+        : Icons.favorite_border;
 
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            BigCard(pair: pair),
-            SizedBox(height: 15),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-
-                // Favorite button.
-                ElevatedButton.icon(
-                  onPressed: () {
-                    appState.toggleFavorite();
-                  },
-                  icon: Icon(icon),
-                  label: Text('like'),
-                ),
-
-                // Spacer.
-                SizedBox(width: 15),
-
-                // Next button.
-                ElevatedButton(
-                  onPressed: () {
-                    appState.getNextName();
-                  },
-                  child: Text('Next'),
-                ),
-
-              ],
-            ),
-          ],
-        ),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          BigCard(pair: pair),
+          SizedBox(height: 15.0),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {
+                  appState.toggleFavorite();
+                },
+                icon: Icon(icon),
+                label: Text('Like'),
+              ),
+              SizedBox(width: 15.0),
+              ElevatedButton(
+                onPressed: () {
+                  appState.getNextName();
+                },
+                child: Text('Next'),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -118,7 +139,6 @@ class BigCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final theme = Theme.of(context);
 
     final style = theme.textTheme.displayMedium!.copyWith(
@@ -130,10 +150,10 @@ class BigCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Text(
-          pair.asPascalCase, 
-          style: style, 
+          pair.asPascalCase,
+          style: style,
           semanticsLabel: "${pair.first} ${pair.second}",
-          ),
+        ),
       ),
     );
   }
