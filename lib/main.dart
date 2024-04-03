@@ -29,6 +29,11 @@ class MyApp extends StatelessWidget {
 /// The state of the main application widget.
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
+
+  void getNextName() {
+    current = WordPair.random();
+    notifyListeners();
+  }
 }
 
 /// The home page widget.
@@ -40,8 +45,14 @@ class MyHomePage extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          Text('A random idea:'),
-          Text(appState.current.asLowerCase),
+          Text("Here's a name:"),
+          Text(appState.current.asPascalCase),
+          ElevatedButton(
+            onPressed: () {
+              appState.getNextName();
+            },
+            child: Text('New Name'),
+          ),
         ],
       ),
     );
