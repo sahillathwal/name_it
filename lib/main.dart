@@ -214,43 +214,48 @@ class FavoritesPage extends StatelessWidget {
         ),
         body: Container(
           color: theme.colorScheme.primaryContainer,
-          child: Expanded(
-            // child: GridView.count(
-            //   crossAxisCount: 2,
-            //   children: favorites
-            //       .map(
-            //         (item) => Center(
-            //           child: Text(
-            //             item.toString(),
-            //             style: Theme.of(context).textTheme.headlineSmall,
-            //           ),
-            //         ),
-            //       )
-            //       .toList(),
-            // ),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                // child: GridView.count(
+                //   crossAxisCount: 2,
+                //   children: favorites
+                //       .map(
+                //         (item) => Center(
+                //           child: Text(
+                //             item.toString(),
+                //             style: Theme.of(context).textTheme.headlineSmall,
+                //           ),
+                //         ),
+                //       )
+                //       .toList(),
+                // ),
 
-            child: GridView(
-              gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 400,
-                childAspectRatio: 400 / 80,
-              ),
-              children: [
-                for (var pair in appState.favorites)
-                  ListTile(
-                    leading: IconButton(
-                      icon: Icon(Icons.delete_outline, semanticLabel: 'Delete'),
-                      color: theme.colorScheme.primary,
-                      onPressed: () {
-                        appState.removeFavorite(pair);
-                      },
-                    ),
-                    title: Text(
-                      pair.asPascalCase,
-                      semanticsLabel: pair.asPascalCase,
-                    ),
+                child: GridView(
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 400,
+                    childAspectRatio: 400 / 80,
                   ),
-              ],
-            ),
+                  children: [
+                    for (var pair in appState.favorites)
+                      ListTile(
+                        leading: IconButton(
+                          icon: Icon(Icons.delete_outline,
+                              semanticLabel: 'Delete'),
+                          color: theme.colorScheme.primary,
+                          onPressed: () {
+                            appState.removeFavorite(pair);
+                          },
+                        ),
+                        title: Text(
+                          pair.asPascalCase,
+                          semanticsLabel: pair.asPascalCase,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
